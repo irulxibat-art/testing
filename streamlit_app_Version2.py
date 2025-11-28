@@ -29,6 +29,20 @@ from typing import Dict, Optional, Tuple
 import streamlit as st
 import pandas as pd
 
+# Small compatibility helper for rerun
+def try_rerun():
+    """Try to rerun the Streamlit script. Some Streamlit versions expose
+    experimental_rerun, others expose rerun, and some may not expose either.
+    This helper calls the available API and never raises if missing."""
+    try:
+        if hasattr(st, "experimental_rerun"):
+            st.experimental_rerun()
+        elif hasattr(st, "rerun"):
+            st.rerun()
+    except Exception:
+        # silently ignore if not available
+        return
+
 # Try to import websocket-client, but don't let the app crash if it's missing.
 try:
     from websocket import WebSocketApp  # websocket-client package
